@@ -1,0 +1,42 @@
+{
+  "name": "agentos-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AI agent creation and orchestration platform",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "build": "tsc",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest",
+    "@langchain/anthropic": "latest",
+    "@langchain/core": "latest",
+    "@langchain/groq": "latest",
+    "@langchain/langgraph": "latest",
+    "@langchain/langgraph-checkpoint-postgres": "latest",
+    "@paralleldrive/cuid2": "latest",
+    "bullmq": "latest",
+    "dotenv": "latest",
+    "drizzle-orm": "latest",
+    "fastify": "latest",
+    "ioredis": "latest",
+    "isolated-vm": "latest",
+    "nodemailer": "latest",
+    "openai": "latest",
+    "postgres": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/nodemailer": "latest",
+    "drizzle-kit": "latest",
+    "ts-node": "latest",
+    "tsx": "^4.21.0",
+    "typescript": "latest"
+  }
+}
