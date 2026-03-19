@@ -7,7 +7,7 @@ import type { Tool } from '../db/schema'
 
 // Maps platform tool ID → its handler function
 export const platformHandlers: Record<string, Function> = {
-    web_search: webSearch,
+    perform_internet_search: webSearch,
     telegram_notify: telegramNotify,
     send_email: sendEmail,
     store_credential: storeCredential,

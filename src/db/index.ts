@@ -10,5 +10,14 @@ const client = postgres(process.env.DATABASE_URL!, {
     connect_timeout: 10,
 })
 
-export const db = drizzle(client, { schema })
+import { logger } from '../utils/logger'
+
+export const db = drizzle(client, {
+    schema,
+    logger: process.env.NODE_ENV === 'development' ? {
+        logQuery(query, params) {
+            logger.debug({ query, params }, 'Database Query')
+        }
+    } : undefined
+})
 export type DB = typeof db

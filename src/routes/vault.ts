@@ -1,12 +1,9 @@
 import type { FastifyInstance } from 'fastify'
 import { setCredential } from '../vault'
+import { authHook } from '../utils/auth'
 
 export async function vaultRoutes(fastify: FastifyInstance) {
-    fastify.addHook('preHandler', async (req: any, reply) => {
-        const userId = req.headers['x-user-id']
-        if (!userId) return reply.code(401).send({ error: 'Missing X-User-Id header' })
-        req.userId = userId
-    })
+    fastify.addHook('preHandler', authHook)
 
     // POST /vault — store an encrypted credential
     fastify.post('/vault', async (req: any, reply) => {

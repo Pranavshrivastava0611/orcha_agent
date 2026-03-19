@@ -2,6 +2,7 @@ import { eq, and, desc, inArray, sql } from 'drizzle-orm'
 import { createId } from '@paralleldrive/cuid2'
 import { db } from './index'
 import {
+    users,
     agents,
     tools,
     credentials,
@@ -10,6 +11,15 @@ import {
     type NewAgent,
     type NewTool,
 } from './schema'
+
+export const userQueries = {
+    ensure: (id: string, email: string) =>
+        db.insert(users).values({ id, email })
+            .onConflictDoUpdate({
+                target: users.id,
+                set: { email, updatedAt: new Date() }
+            }).returning(),
+}
 
 export const agentQueries = {
     create: (data: NewAgent) =>

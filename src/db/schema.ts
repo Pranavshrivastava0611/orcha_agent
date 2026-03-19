@@ -27,10 +27,6 @@ export const memSourceEnum = pgEnum('mem_source', ['conversation', 'upload', 'we
 
 // modelEnum — all supported LLM providers
 export const modelEnum = pgEnum('model', [
-    'llama-3.3-70b-versatile',
-    'llama-3.1-8b-instant',
-    'mixtral-8x7b-32768',
-    'gemma2-9b-it',
     'openai/gpt-oss-120b',
 ])
 
@@ -89,7 +85,9 @@ export const agents = pgTable('agents', {
     userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
-})
+}, (table) => ({
+    uniqueUserName: unique().on(table.userId, table.name),
+}))
 
 // Credentials vault
 export const credentials = pgTable('credentials', {

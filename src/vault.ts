@@ -45,19 +45,39 @@ export async function setCredential(userId: string, key: string, value: string) 
 
 export async function getCredential(userId: string, key: string): Promise<string | null> {
     const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1)
-    if (!user) return null
+    if (!user) {
+        console.warn(`[Vault] User ${userId} not found while loading credential ${key}`)
+        return null
+    }
 
-    const encrypted = (user.vault as Record<string, string>)[key]
-    return encrypted ? decrypt(encrypted) : null
+    const stored = (user.vault as Record<string, string>)[key]
+    if (!stored) {
+        console.warn(`[Vault] Credential '${key}' is missing for user ${userId}`)
+        return null
+    }
+
+    // Try to decrypt; if it fails, the value might be stored as plain text
+    try {
+        const val = decrypt(stored)
+        console.log(`[Vault] Decrypted credential '${key}' for user ${userId} (length=${val.length})`)
+        return val
+    } catch (err: any) {
+        console.warn(`[Vault] Decryption failed for '${key}': ${err.message}. Treating as plain text.`)
+        return stored
+    }
 }
 
 export async function getMissingCredentials(
     userId: string,
     required: { key: string; label: string; url?: string }[]
 ) {
+    console.log(`[Vault] Checking required credentials for user ${userId}:`, required.map(r => r.key))
     const [user] = await db.select().from(users).where(eq(users.id, userId)).limit(1)
     if (!user) return required
 
     const vault = user.vault as Record<string, string>
-    return required.filter(r => !vault[r.key])
+    const missing = required.filter(r => !vault[r.key])
+
+    console.log(`[Vault] Status for user ${userId}: FOUND=[${required.filter(r => vault[r.key]).map(r => r.key)}], MISSING=[${missing.map(r => r.key)}]`)
+    return missing
 }

@@ -14,6 +14,7 @@ export async function telegramNotify(input: { message: string }, userId: string)
         body: JSON.stringify({ chat_id: chatId, text: input.message }),
     })
     const data: any = await res.json()
+    console.log('[Telegram Tool] Response:', JSON.stringify(data, null, 2))
     return { ok: data.ok }
 }
 

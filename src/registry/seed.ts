@@ -7,10 +7,10 @@ import { storeCredentialSchema } from './tools/storeCredential'
 export async function seedTools() {
     const platformTools = [
         {
-            id: 'web_search',
+            id: 'perform_internet_search',
             type: 'platform' as const,
-            name: 'Web Search',
-            description: 'Search the web for current information using a query string.',
+            name: 'Internet Search',
+            description: 'Search the internet for real-time information using a query.',
             inputSchema: webSearchSchema,
             isPublic: true,
         },

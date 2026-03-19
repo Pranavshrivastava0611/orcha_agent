@@ -1,12 +1,9 @@
 import type { FastifyInstance } from 'fastify'
 import { toolQueries } from '../db/queries'
+import { authHook } from '../utils/auth'
 
 export async function toolRoutes(fastify: FastifyInstance) {
-    fastify.addHook('preHandler', async (req: any, reply) => {
-        const userId = req.headers['x-user-id']
-        if (!userId) return reply.code(401).send({ error: 'Missing X-User-Id header' })
-        req.userId = userId
-    })
+    fastify.addHook('preHandler', authHook)
 
     // GET /tools — platform tools + user's own tools
     fastify.get('/tools', async (req: any) => {
